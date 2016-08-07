@@ -1,0 +1,40 @@
+<login>
+  <form onsubmit={ submitForm }>
+    <div id="login" class="modal">
+      <div class="modal-content">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">person</i>
+            <input id="login-userName" type="text" class="validate">
+            <label for="login-userName">User Id</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">security</i>
+            <input id="login-userPassword" type="password" class="validate">
+            <label for="login-userPassword">Password</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class=" modal-action modal-close waves-effect waves-green btn-flat">Login</button>
+      </div>
+    </div>
+  </form>
+
+  var self = this;
+  submitForm() {
+    opts.app.login(self['login-userName'].value, self['login-userPassword'].value);
+  }
+
+  self.on('mount', function(){
+    $('#login').openModal({
+      dismissible: false
+    });
+    setTimeout(function() {
+      $("#login-userName").focus();
+    }, 500);
+  });
+
+</login>

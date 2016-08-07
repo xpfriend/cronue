@@ -1,0 +1,27 @@
+{
+  "name": "cronue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-nodemon": "^2.1.0",
+    "gulp-remote-src": "^0.4.1",
+    "jquery": "^3.1.0",
+    "riot": "^2.5.0"
+  },
+  "dependencies": {
+    "co-child-process": "0.0.3",
+    "koa": "^1.2.1",
+    "koa-body-parser": "^1.1.2",
+    "koa-logger": "^1.3.0",
+    "koa-router": "^5.4.0",
+    "koa-static": "^2.0.0",
+    "material-design-icons-iconfont": "^2.0.5",
+    "materialize-css": "^0.97.7",
+    "promised-ldap": "^0.3.0"
+  }
+}

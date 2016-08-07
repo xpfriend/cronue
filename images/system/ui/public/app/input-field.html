@@ -1,0 +1,25 @@
+<input-field>
+  <div class={'pif input-field ' + ((opts.class)? opts.class : '' )}>
+    <i class="material-icons prefix">{ opts.icon }</i>
+    <input id={ opts.fid } type={ opts.type || 'text'}
+      value={ parent.job[opts.fid] } onchange={ change }
+      pattern={ opts.pattern }
+      required={ opts.required } readonly={ opts.readonly }>
+    <label for={ opts.fid }>{ opts.label }</label>
+  </div>
+
+  <style>
+    .pif input[readonly] {
+      color: black;
+    }
+  </style>
+
+  var self = this;
+
+  change(e) {
+    self.parent.job[self.opts.fid] = e.target.value;
+    if(opts.onchange) {
+      opts.onchange(e);
+    }
+  }
+</input-field>

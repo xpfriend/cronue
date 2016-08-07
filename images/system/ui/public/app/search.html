@@ -1,0 +1,79 @@
+<search>
+  <form id="search-form">
+    <div class="row">
+      <div id="search-field" class="input-field col s10">
+        <input id="search" type="text" oninput={ inputKeyword }>
+        <label for="search">Search</label>
+      </div>
+      <div id="clear-button" class="input-field col s2">
+        <button class="btn-flat" onclick={ clearField }><i class="material-icons">clear</i></button>
+      </div>
+    </div>
+
+    <div class="collection">
+      <a class="collection-item" each={ opts.app.jobs } onclick={ parent.itemSelected } >
+        <span>{ jobName }</span>
+      </a>
+    </div>
+
+    <div>
+      <button type="button" onclick={ newJob } class="waves-effect waves-light btn light-blue darken-1" if={ opts.app.unique }>New Job</button>
+    </div>
+  </form>
+
+  <style scoped>
+  #search-field {
+    padding-right:0px;
+  }
+  #clear-button, #clear-button button {
+    margin-left:0px;
+    padding-left:0px;
+    margin-right:0px;
+    padding-right:0px;
+  }
+  a.collection-item {
+      cursor: pointer;
+  }
+  </style>
+
+  var self = this;
+
+  clearField() {
+    self.search.value = '';
+    opts.app.search('');
+  }
+
+  itemSelected(e) {
+    opts.app.trigger('selected', {
+      job: e.item,
+      newJob: false
+    });
+    opts.app.unique = false;
+    Materialize.updateTextFields();
+  }
+
+  inputKeyword() {
+    opts.app.search(self.search.value);
+  }
+
+  newJob() {
+    opts.app.trigger('selected', {
+      job: { jobName: self.search.value, script: '#!/bin/bash\n' },
+      newJob: true
+    });
+  }
+
+  opts.app.on('authenticated', function() {
+    self.clearField();
+  });
+
+  opts.app.on('found', function() {
+    self.update();
+    $("#search").focus();
+  });
+
+  opts.app.on('updated', function() {
+    self.clearField();
+  });
+
+</search>

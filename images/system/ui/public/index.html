@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="icons/material-design-icons.css"/>
+    <link rel="stylesheet" href="css/materialize.min.css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+      input {
+        font-family:'Lucida Grande', Meiryo, sans-serif;
+        font-weight: bold;
+      }
+      .brand-logo i {
+        margin-left: 15px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="orange darken-1">
+      <div class="nav-wrapper">
+        <a href="/" class="brand-logo"><i class="material-icons left">alarm</i>Cronue</a>
+        <ul id="nav-mobile" class="right">
+          <li><a href="/"class="modal-trigger">Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col s12 m4"><search/></div>
+        <div class="col s12 m8"><job/></div>
+      </div>
+    </div>
+
+    <login></login>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/riot+compiler.min.js"></script>
+    <script src="js/cron-ui.min.js"></script>
+    <script src="app/app.js"></script>
+    <script type="riot/tag" src="app/search.html"></script>
+    <script type="riot/tag" src="app/job.html"></script>
+    <script type="riot/tag" src="app/login.html"></script>
+    <script type="riot/tag" src="app/input-field.html"></script>
+    <script type="riot/tag" src="app/multiline-input-field.html"></script>
+    <script type="riot/tag" src="app/cron-ui.html"></script>
+    <script>
+      riot.mount('*', { app: app() });
+    </script>
+
+  </body>
+</html>

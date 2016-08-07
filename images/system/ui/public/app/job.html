@@ -1,0 +1,88 @@
+<job>
+  <form id="job-form" onsubmit={ submitForm }>
+    <input-field fid="jobName" icon="work" value={ job.jobName } label="Job Name" readonly="true"/>
+    <cron-ui fid="timeAndDate" icon="schedule" label="Time and Date" />
+    <multiline-input-field fid="script" icon="description" value={ job.script } label="Script" required="true"/>
+    <div class="row">
+      <div class="col s6">
+        <button id="save" type="submit" 
+          class="waves-effect waves-light btn-large light-blue darken-1"><i class="material-icons left">check</i>Save</button>
+      </div>
+      <div class="col s6">
+        <button id="remove" type="button" class="waves-effect waves-light btn-large red darken-1"
+          onclick={ delUser }><i class="material-icons left">clear</i>Delete</button>
+      </div>
+    </div>
+  </form>
+
+  var self = this;
+
+  initJob() {
+    self.job = {
+      jobName: '',
+      timeAndDate: '',
+      script: ''
+    };
+  }
+
+  updateForm(updatedUser) {
+    self.initJob();
+    for(var key in updatedUser) {
+      self.job[key] = updatedUser[key];
+    }
+    self.update();
+    Materialize.updateTextFields();
+  }
+
+  submitForm() {
+    opts.app.save(self.job);
+  }
+
+  updateDisplayName() {
+    if(!self.job.displayName && self.job.script && self.job.logs) {
+      self.job.displayName = self.job.script + ', ' + self.job.logs;
+    }
+  }
+
+  delUser() {
+    if(confirm('Delete ' + self.job.jobName + '?')) {
+      opts.app.remove(self.job);
+    }
+  }
+
+  initForm() {
+    $('#save').hide();
+    $('#remove').hide();
+    $('#job-form input, #job-form button').attr('disabled', false);
+  }
+
+  self.on('mount', function() {
+    $('#job-form input, #job-form button').attr('disabled', true);
+    self.initJob();
+  });
+
+  opts.app.on('authenticated', function() {
+    self.initForm();
+  });
+
+  opts.app.on('found', function() {
+    $('#save').hide();
+    $('#remove').hide();
+    self.updateForm({});
+  });
+
+  opts.app.on('selected', function(e) {
+    self.updateForm(e.job);
+    $('#save').show();
+    if(e.newJob) {
+      $('#remove').hide();
+    } else {
+      $('#remove').show();
+    }
+    $('#timeAndDate').focus();
+  });
+
+  opts.app.on('updated', function() {
+    self.initForm();
+  });
+</job>

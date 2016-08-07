@@ -1,0 +1,25 @@
+<multiline-input-field>
+  <div class={'pif input-field ' + ((opts.class)? opts.class : '' )}>
+    <i class="material-icons prefix">{ opts.icon }</i>
+    <textarea id={ opts.fid } class="materialize-textarea"
+      value={ parent.job[opts.fid] } onchange={ change }
+      required={ opts.required } readonly={ opts.readonly }>
+    </textarea>
+    <label for={ opts.fid }>{ opts.label }</label>
+  </div>
+
+  <style>
+    .pif input[readonly] {
+      color: black;
+    }
+  </style>
+
+  var self = this;
+
+  change(e) {
+    self.parent.job[self.opts.fid] = e.target.value;
+    if(opts.onchange) {
+      opts.onchange(e);
+    }
+  }
+</multiline-input-field>

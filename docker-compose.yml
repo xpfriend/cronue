@@ -1,0 +1,40 @@
+version: '2'
+services:
+  ldap:
+    image: osixia/openldap:1.1.3
+    environment:
+      - LDAP_TLS=false
+      - LDAP_LOG_LEVEL=256
+      - LDAP_DOMAIN=example.com
+      - LDAP_ADMIN_PASSWORD=admin
+    volumes:
+      - /var/lib/ldap
+      - /etc/ldap/slapd.d
+
+  user:
+    image: xpfriend/pocci-account-center:1.0.29
+    environment:
+      - LDAP_URL=ldap://ldap
+      - LDAP_BASE_DN=dc=example,dc=com
+    links:
+     - ldap:ldap
+    ports:
+      - "9898:9898"
+    restart: always
+
+  system:
+    image: xpfriend/cronue-system:latest
+    volumes:
+      - /etc
+      - /var/spool/cron/crontabs
+      - /home
+    links:
+     - ldap:ldap
+    environment:
+      - DOCKER_HOST=tcp://172.19.0.1:4243
+      - TZ=${TZ}
+      - AUTH_TYPE=LDAP
+      - LDAP_URL=ldap://ldap
+      - LDAP_BASE_DN=dc=example,dc=com
+    ports:
+      - "9899:9899"

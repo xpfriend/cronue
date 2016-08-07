@@ -1,0 +1,14 @@
+# Logs
+logs
+*.log
+/log/
+
+# Dependency directory
+node_modules/
+bower_components/
+
+# Generated files
+**/public/css/
+**/public/fonts/
+**/public/icons/
+**/public/js/

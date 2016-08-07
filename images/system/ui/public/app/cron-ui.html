@@ -1,0 +1,45 @@
+<cron-ui>
+  <div class={'input-field ' + ((opts.class)? opts.class : '' )}>
+    <i class="material-icons prefix">{ opts.icon }</i>
+    <span class="cron-ui-fields">
+      Every <span id={ opts.fid }></span>
+    </span>
+    <label class="cron-ui-label active" for={ opts.fid }>{ opts.label }</label>
+  </div>
+
+  <style>
+  span.cron-ui-fields {
+    display: inline-block;
+    margin-left: 3rem;
+  }
+  select {
+    display: inline;
+    width: auto;
+  }
+  label.cron-ui-label {
+    left: 0;
+  }
+  </style>
+
+  var self = this;
+  var defalutCronString = '0 12 * * *';
+
+  self.on('mount', function() {
+    self.cronui = new CronUI('#' + self.opts.fid, {
+      initial: defalutCronString,
+      changeEvent: function(cronString) {
+        self.parent.job[self.opts.fid] = cronString;
+      }
+    });
+  });
+
+  self.on('updated', function() {
+    if(!self.parent.job[self.opts.fid]) {
+      self.parent.job[self.opts.fid] = defalutCronString;
+    }
+    var cronString = self.parent.job[self.opts.fid];
+    self.cronui.setCronString(cronString);
+    self.cronui.currentValue = cronString;
+  });
+
+</cron-ui>
