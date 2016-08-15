@@ -2,7 +2,7 @@
 set -e
 
 TIMEOUT=300
-LOG_DIR=~/logs/`date -I | sed 's|-|/|g'`/$1
+LOG_DIR=~/logs/$1/`date -I | sed 's|-|/|g'`
 TMP_DIR=~/tmp
 mkdir -p "${LOG_DIR}"
 

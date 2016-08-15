@@ -118,6 +118,28 @@ var searchJobs = function*(body) {
   };
 };
 
+var readLogFile = function(logDir, logFile) {
+  try {
+    return fs.readFileSync(path.join(logDir, logFile), 'utf8');
+  } catch(e) {
+    console.log(e);
+    return '';
+  }
+};
+
+var getLog = function*(body) {
+  var userName = body.userName;
+  var jobName = body.job.jobName;
+  var logDate = body.job.logDate;
+  var logDir = path.join('/home', userName, 'logs', jobName, logDate);
+  var stdout = readLogFile(logDir, 'stdout.txt');
+  var stderr = readLogFile(logDir, 'stderr.txt');
+  return {
+    stdout: stdout,
+    stderr: stderr
+  };
+};
+
 var execute = function*(http, func) {
   var body = http.request.body;
   if(process.env.AUTH_TYPE !== 'NO_AUTH') {
@@ -144,4 +166,8 @@ module.exports.save = function*() {
 
 module.exports.remove = function*() {
   this.body = yield execute(this, removeJob);
+};
+
+module.exports.log = function*() {
+  this.body = yield execute(this, getLog);
 };

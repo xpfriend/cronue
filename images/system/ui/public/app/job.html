@@ -2,7 +2,46 @@
   <form id="job-form" onsubmit={ submitForm }>
     <input-field fid="jobName" icon="work" value={ job.jobName } label="Job Name" readonly="true"/>
     <cron-ui fid="timeAndDate" icon="schedule" label="Time and Date" />
-    <multiline-input-field fid="script" icon="description" value={ job.script } label="Script" required="true"/>
+    <div class="row">
+      <div class="col s12">
+        <i class="material-icons prefix">description</i>
+        <div class="z-depth-1 tab_area">
+          <ul class="tabs">
+            <li class="tab col s3"><a href="#tab_script" class="active">Script</a></li>
+            <li class="tab col s3"><a href="#tab_log">Log</a></li>
+          </ul>
+
+          <div id="tab_script" class="tab_contents">
+            <multiline-input-field fid="script" value={ job.script } required="true"/>
+          </div>
+
+          <div id="tab_log" class="tab_contents">
+            <div class="row">
+              <div class="col s12">
+                <input type="date" class="datepicker" id="log_date" onchange={ getLog } />
+              </div>
+              <div class="col s6">
+                <span>
+                  <input name="log_type" type="radio" id="stdout" checked="true" onclick={ showLogContents } />
+                  <label for="stdout">stdout</label>
+                </span>
+              </div>
+              <div class="col s6">
+                <span>
+                  <input name="log_type" type="radio" id="stderr" onclick={ showLogContents } />
+                  <label for="stderr">stderr</label>
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <textarea id="log_contents" class="materialize-textarea"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col s6">
         <button id="save" type="submit" 
@@ -10,26 +49,53 @@
       </div>
       <div class="col s6">
         <button id="remove" type="button" class="waves-effect waves-light btn-large red darken-1"
-          onclick={ delUser }><i class="material-icons left">clear</i>Delete</button>
+          onclick={ removeJob }><i class="material-icons left">clear</i>Delete</button>
       </div>
     </div>
   </form>
 
+  <style>
+    .tab_area {
+       margin-left:40px;
+       padding: 0 10px 10px 10px;
+    }
+    .tab_contents {
+      margin-top: 20px;
+      height: 300px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  </style>
+
   var self = this;
+
+  getTodayAsString() {
+    var now = new Date();
+    return now.getFullYear() + '-' +
+          ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
+          ('0' + now.getDate()).slice(-2);
+  }
 
   initJob() {
     self.job = {
       jobName: '',
       timeAndDate: '',
-      script: ''
+      script: '',
+      logDate: self.getTodayAsString(),
+      stdout: '',
+      stderr: ''
     };
   }
 
-  updateForm(updatedUser) {
+  updateForm(updatedJob) {
     self.initJob();
-    for(var key in updatedUser) {
-      self.job[key] = updatedUser[key];
+    for(var key in updatedJob) {
+      self.job[key] = updatedJob[key];
     }
+    self.log_date.value = self.getTodayAsString();
+    self.log_contents.value = '';
+    self.stdout.checked = true;
+    $('ul.tabs').tabs('select_tab', 'tab_script');
     self.update();
     Materialize.updateTextFields();
   }
@@ -44,7 +110,7 @@
     }
   }
 
-  delUser() {
+  removeJob() {
     if(confirm('Delete ' + self.job.jobName + '?')) {
       opts.app.remove(self.job);
     }
@@ -56,7 +122,25 @@
     $('#job-form input, #job-form button').attr('disabled', false);
   }
 
+  getLog() {
+    if(!self.job.jobName) {
+      return;
+    }
+    self.job.logDate = $('#log_date').val().replace(/-/g, '/');
+    opts.app.getLog(self.job);
+  }
+
+  showLogContents() {
+    var text = $('#stdout').prop('checked')? self.job.stdout : self.job.stderr;
+    $('#log_contents').val(text).trigger('autoresize');
+  }
+
   self.on('mount', function() {
+    $('ul.tabs').tabs({onShow: function(){
+      if($('#tab_log').is(':visible')) {
+        self.getLog();
+      }
+    }});
     $('#job-form input, #job-form button').attr('disabled', true);
     self.initJob();
   });
@@ -84,5 +168,9 @@
 
   opts.app.on('updated', function() {
     self.initForm();
+  });
+
+  opts.app.on('log_retrieved', function() {
+    self.showLogContents();
   });
 </job>

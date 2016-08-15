@@ -10,6 +10,7 @@ var bodyParser = require('koa-body-parser');
 var app = module.exports = koa();
 
 router
+  .post('/log', scheduler.log)
   .post('/search', scheduler.search)
   .post('/login', scheduler.login)
   .post('/save', scheduler.save)

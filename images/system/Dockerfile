@@ -1,4 +1,4 @@
-FROM docker:1.11.2
+FROM docker:1.12.0
 MAINTAINER ototadana@gmail.com
 
 RUN apk add --no-cache busybox-suid nodejs tzdata

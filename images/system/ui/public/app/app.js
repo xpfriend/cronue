@@ -49,6 +49,24 @@ function app() {
     });
   };
 
+  self.getLog = function(job) {
+    $.ajax({
+      url: '/log',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        job: job,
+        userName: self.account.userName,
+        userPassword: self.account.userPassword
+      }
+    }).done(function(data, textStatus){
+      console.log(data);
+      job.stdout = data.stdout;
+      job.stderr = data.stderr;
+      self.trigger('log_retrieved');
+    });
+  };
+
   self.login = function(userName, userPassword) {
     var account = {
       userName: userName,

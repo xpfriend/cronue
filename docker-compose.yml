@@ -12,7 +12,7 @@ services:
       - /etc/ldap/slapd.d
 
   user:
-    image: xpfriend/pocci-account-center:1.0.29
+    image: xpfriend/pocci-account-center:2.0.0
     environment:
       - LDAP_URL=ldap://ldap
       - LDAP_BASE_DN=dc=example,dc=com
