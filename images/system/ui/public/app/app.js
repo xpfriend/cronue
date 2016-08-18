@@ -60,7 +60,6 @@ function app() {
         userPassword: self.account.userPassword
       }
     }).done(function(data, textStatus){
-      console.log(data);
       job.stdout = data.stdout;
       job.stderr = data.stderr;
       self.trigger('log_retrieved');
